@@ -6,4 +6,9 @@
 ## Tecnologias
 - ReactJS
 - TailwindCSS
-- Localstorage
+- Localstorage 
+
+## Rodar local
+- Clonar o projeto
+- Rodar ` npm install ` para pegar as dependências do projeto
+- Para rodar ` npm run dev ` e divirta-se 😁
