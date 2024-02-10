@@ -1,7 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog';
+import * as Select from '@radix-ui/react-select';
 import { X } from 'lucide-react';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { toast } from 'sonner';
+import flagBR from '../assets/icons8-brasil-emoji-48.png';
+import flagUSA from '../assets/icons8-emoji-dos-estados-unidos-48.png';
 
 interface NewNoteCardProps {
   onNoteCreated: (content: string) => void
@@ -14,6 +17,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
   const [shouldShowOnboarding, setShouldShowOnboarding] = useState(true);
   const [content, setContent] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [langSpeechRecognation, setLangSpeechRecognation] = useState("");
 
   function handleStartEditor () {
     setShouldShowOnboarding(false);
@@ -41,13 +45,17 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 
   function handleStartRecording() {
     
-
     const isSpeechRecognitionAPIAvailable = 
       'SpeechRecognition' in window ||
       'webkitSpeechRecognition' in window;  
 
-    if(!isSpeechRecognitionAPIAvailable){
+    if (!isSpeechRecognitionAPIAvailable){
       toast.error("Infelizmente seu navegador não suporta a API de gravação!");
+      return;
+    }
+    console.log(langSpeechRecognation);
+    if (!langSpeechRecognation) {
+      toast.info("Seleciona um idioma para gravar susa nota!");
       return;
     }
 
@@ -58,7 +66,7 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 
     speechRecognition = new SpeechRecognitionAPI();
 
-    speechRecognition.lang = 'pt-BR'; // trazer um combobo de seleção de linguagem
+    speechRecognition.lang = langSpeechRecognation; // trazer um combobo de seleção de linguagem
     speechRecognition.continuous = true; 
     speechRecognition.maxAlternatives = 1;
     speechRecognition.interimResults = true; // resultados conforme vou falando
@@ -104,8 +112,35 @@ export function NewNoteCard({ onNoteCreated }: NewNoteCardProps) {
 
               <form className="flex-1 flex flex-col">
                 <div className='flex flex-1 flex-col gap-3 p-5'>
-                  <span className="text-sm font-medium text-slate-300">
+                  <span className="text-sm font-medium text-slate-300 flex items-center gap-4">
                     Adicionando nota
+
+                    <Select.Root value={langSpeechRecognation} onValueChange={setLangSpeechRecognation}>
+                      <Select.Trigger className="bg-transparent text-slate-400 p-1 hover:ring-1 hover:ring-slate-600 outline-none rounded">
+                        <Select.Value placeholder="Selecione uma língua..." />
+                      </Select.Trigger>
+                      <Select.Portal>
+                        <Select.Content className="bg-slate-700 p-2 rounded border border-lime-500">
+                          <Select.Viewport className="SelectViewport">
+                          <Select.Group>
+                            <Select.Item value='pt-br' className='w-full cursor-pointer hover:underline flex items-center gap-2'>
+                              <img src={flagBR} alt="Lingua nativa do Brasil" className='h-6' /> 
+                              <Select.ItemText>
+                                Português
+                              </Select.ItemText>
+                            </Select.Item>
+
+                            <Select.Item  value='en-US' className='w-full cursor-pointer hover:underline flex items-center gap-2'>
+                              <img src={flagUSA} alt="Lingua nativa dos Estados Unidos" className='h-6'/> 
+                              <Select.ItemText>
+                                Inglês
+                              </Select.ItemText>
+                            </Select.Item>
+                          </Select.Group>
+                          </Select.Viewport>
+                        </Select.Content>
+                      </Select.Portal>
+                    </Select.Root>
                   </span>
                   {
                     shouldShowOnboarding ? 
