@@ -10,5 +10,13 @@
 
 ## Rodar local
 - Clonar o projeto
-- Rodar ` npm install ` para pegar as dependências do projeto
-- Para rodar ` npm run dev ` e divirta-se 😁
+- Rodar o comando abaixo para pegar as dependências do projeto
+```sh
+npm install 
+``` 
+
+- Para rodar o projeto 
+```sh
+npm run dev 
+``` 
+## Divirta-se 😁
